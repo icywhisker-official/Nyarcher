@@ -1,6 +1,16 @@
 # Nyarcher
-Nyarcher is a Shell script to install [Nyarch Linux](https://github.com/NyarchLinux/NyarchLinux) customizations on many Linux Distributions
+Nyarcher was a Shell script to install [Nyarch Linux](https://github.com/NyarchLinux/NyarchLinux) customizations on many Linux Distributions
+## Icy is working to convert this to python and implement bug fixes in addition to making this work for Debian / KDE Plasma (Already works as-is on debian, but support for KDE is not there)
 
+
+If you are unfamiliar with my scripts:
+## Icy's Disclaimer:
+Icy works with Generative AI and makes all attempts to vet the code produced. Any and all code seen here should be treated with scrutiny unless otherwise specified by Icy directly in this code-base.
+
+# Status: In-Dev (Unapproved by Icy)
+
+
+---------------------------------------
 ## Disclaimer
 The script aims to give the most similar experience to Nyarch Linux on any Linux distribution, without editing system files. For these reasons, read the [What you are missing section](#what-you-are-missing).
 Also, some applications, specially Nyarch Scripts, might not work correctly in non arch based distributions.
