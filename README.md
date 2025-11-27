@@ -1,69 +1,87 @@
 # Nyarcher
-Nyarcher was a Shell script to install [Nyarch Linux](https://github.com/NyarchLinux/NyarchLinux) customizations on many Linux Distributions
-## Icy is working to convert this to python and implement bug fixes in addition to making this work for Debian / KDE Plasma (Already works as-is on debian, but support for KDE is not there)
 
+Nyarcher **started life as a shell script** to install  
+[Nyarch Linux](https://github.com/NyarchLinux/NyarchLinux) customizations on various distros.
 
-If you are unfamiliar with my scripts:
-## Icy's Disclaimer:
-Icy works with Generative AI and makes all attempts to vet the code produced. Any and all code seen here should be treated with scrutiny unless otherwise specified by Icy directly in this code-base.
+Icy is now converting it to **Python**, fixing bugs, and making it play nicely with  
+**Debian 13 + KDE Plasma 6** — *without* trying to cosplay as a full Nyarch install.
 
-# Status: In-Dev (Unapproved by Icy)
+---
 
+> <span style="color:#ff3333; font-weight:900; font-size:130%">STOP</span> before you go wild with this script…
 
----------------------------------------
-## Disclaimer
-The script aims to give the most similar experience to Nyarch Linux on any Linux distribution, without editing system files. For these reasons, read the [What you are missing section](#what-you-are-missing).
-Also, some applications, specially Nyarch Scripts, might not work correctly in non arch based distributions.
-The only opeartions that are going to edit system files, are flagged with [SYSTEM]. They are not dangerous, but you better know that they are doing it.
-If something goes wrong, by creating a new user on your distribution, you won't be affected by the changes that the script does, excluding the changes made by part of the script flagged as [SYSTEM].
-## Install pre-requirements
-**On any distribution, a working installation of Gnome 47 is needed**
+- I **strongly** recommend installing **Timeshift** and taking a snapshot that  
+  **includes your home directory**.
+  - If you don't like the changes, you can yeet everything and go back to a clean state in a few minutes.
 
-### Arch-based distributions
+- If you ever decide you want the **original dev’s full Nyarch experience**, you can:
+  - install **GNOME** as a desktop environment
+  - then run the **original upstream Nyarcher script** on top of that.
+
+- I tested their script too — it works, but there are bugs/quirks.
+  After reverse-engineering it, I ended up with this version instead:
+  a **“best of both worlds”** setup where:
+  - you keep **KDE**
+  - you still get a bunch of **Nyarch goodies**
+  - you **don’t** have to swap OS/DE just to enjoy the aesthetic.
+
+If you eventually want the *full* Nyarch experience, you’d just install their OS anyway.  
+This script is intentionally more minimal than going full GNOME.
+
+---
+
+## Icy's Disclaimer
+
+I work with **generative AI** and do my best to vet everything that lands in this repo.  
+Still: **treat all code here with scrutiny** unless I explicitly mark it as reviewed and blessed in this codebase.
+
+> **Status:** `In-Dev` — **UNAPPROVED BY ICY** for general use. Expect rough edges.
+
+---
+
+## What this script *tries* to do
+
+- Give you a **Nyarch-flavored KDE setup** on **Debian 13**:
+  - Nyarch wallpapers
+  - Nyarch icon theme (Tela-circle-MaterialYou)
+  - GTK themes + configs wired into KDE
+  - Pywal hook for terminal theming
+  - Flatpak overrides so GTK themes apply to Flatpak apps
+  - Optional:
+    - kitty + Nyarch kitty config (**[SYSTEM]**)
+    - Nekofetch / Nyaofetch in `/usr/bin` + fastfetch config (**[SYSTEM]**)
+    - Nyarch “suggested” Flatpaks (**[SYSTEM]**)
+    - Nyarch “weeb bundle”: CatgirlDownloader / WaifuDownloader / NyarchAssistant (**[SYSTEM]**)
+    - KDE Material You Colors backend + plasmoid via `pipx` + `kpackagetool6`
+
+- Avoid touching system files **unless** a menu entry is explicitly tagged as **`[SYSTEM]`**.  
+  Those options:
+  - install packages with `apt`
+  - drop binaries into `/usr/bin`
+  - tweak global Flatpak behavior
+
+Everything else is scoped to **your user config** under `$HOME`.
+
+---
+
+## Requirements / Scope
+
+This port is **aimed at**:
+
+- **Debian 13 (Trixie)**  
+- **KDE Plasma 6** as the desktop environment  
+- A normal `sudo` setup and working `apt`  
+
+The script will install its own base deps (`curl`, `wget`, `flatpak`, etc.) after you confirm.
+
+> GNOME 47 is **not required** here — that line from upstream docs does **not** apply to this KDE port.
+
+---
+
+## How to run
+
 ```bash
-sudo pacman -S curl python-pip flatpak gnome-menus kitty wget git fastfetch npm nodejs pacman-contrib gnome-shell-extensions tar
-sudo pacman -S python-pywal
-```
-It is also suggested to install `webapp-manager` and `gnome-terminal-transparency` from the AUR.
-
-### Fedora based distributions
-```bash
-sudo dnf install curl flatpak python3-pip svn gnome-menus kitty wget git fastfetch npm nodejs btop gnome-extensions-app
-sudo pip3 install pywal
-sudo cp /usr/local/bin/wal /usr/bin/wal
-```
-NOTE: wal needs to be in /usr/bin/wal, this is the reason of the last command
-### Ubuntu based distributions
-```bash
-sudo apt install curl python3-pip flatpak subversion gnome-menus kitty wget git fastfetch npm nodejs btop gnome-shell-extension-prefs
-sudo pip3 install pywal
-```
-## Running the script 
-If you want to learn what the script does, you can read [NYARCHER.md](https://github.com/NyarchLinux/Nyarcher/blob/main/NYARCHER.md) file.
-<br />
-**NOTE: The script back-ups most of the existing configuration before overwriting them, also, excluding /usr/bin/nyaofetch and /usr/bin/nekofetch files, it only edits settings for the current user**
-<br />
-Download `nyarcher.sh` and add the permission of execution, then execute it
-```bash
-git clone https://github.com/NyarchLinux/Nyarcher.git
+git clone https://github.com/Icywhisker-Official/Nyarcher.git
 cd Nyarcher
-chmod +x nyarcher.sh
-./nyarcher.sh
-```
-The script will ask you if you want to apply some settings, it is **strongly suggested to say yes to everything** in order to have a stable experience.
-
-## What you are missing
-By running this script, you are not going to have the full Nyarch experience, here are the things that are missing from the script, but are present in the distro.
-Note that almost any of those things can be integrated in any distribution, by running some commands or editing a few files.
-- gnome-terminal-transparency is not installed by the script, it is a version of Gnome Terminal that implements transparency. Fedora users have it by default. You can install it from the [AUR](https://aur.archlinux.org/packages/gnome-terminal-transparency)
-- Webapp manager is not installed by default, you can install it from the [AUR](https://aur.archlinux.org/packages/webapp-manager)
-- plymouth (boot animation) is not installed by this script, and neither its theme. Plymouth installation is very distro-specific, [here is the wiki page for Arch Linux](https://wiki.archlinux.org/title/plymouth). The theme used by us is [here](https://github.com/NyarchLinux/NyarchLinux/tree/main/Gnome/usr/share/plymouth/themes)
-- The breeze to install Nyarch on your bare metal hoping it won't destroy your pc
-- Calamares installation: Only available in the live ISO. It is an almost standard Calamares with adwaita qt theme, you can find here the [slides](https://github.com/NyarchLinux/NyarchLinux/tree/main/Gnome/etc/calamares/branding/ezarcher) that are shown during installation.
-- `yay`, installed by the script, they are AUR helpers, you can install it with another AUR helper. Yay is also aliased as `nyay` because lol
-- You will get some expected bugs that are not experienced on Nyarch:
-  - Pywal theming is not going to be generated by default, to fix this, reload the theme (changing color theming from Nyarch Customize or just change the wallpaper if you have material you enabled) 
-  - You have to log out and log in again after running the script
-  - Nyarch Tour won't start after you log back in, just run it yourself
-  - Nyarch updater is very likely to not work correctly
-  - Material You might not be able to apply Material You Gnome Shell theme automatically without logging in/out on some distros (encountered in Fedora). An easy fix has not been found yet. A workaraund without logging out is to change Gnome shell theme on gnome tweaks (or in extension settings) to another and turning back to Material You theme 
+chmod +x debianyarcher.py
+./debianyarcher.py
